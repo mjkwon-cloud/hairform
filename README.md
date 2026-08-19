@@ -6,7 +6,14 @@
 
 - 고객용 폼: `hair_review_form_customer.html`
 - 관리자 대시보드: `hair_review_admin.html`
+- 통합 데모 페이지: `hair_review_unified.html`
 - 공유 백엔드: `apps_script_backend.gs`
+
+## 공개 링크
+
+- 고객용 폼: https://mjkwon-cloud.github.io/hairform/hair_review_form_customer.html
+- 관리자 대시보드: https://mjkwon-cloud.github.io/hairform/hair_review_admin.html
+- GitHub 저장소: https://github.com/mjkwon-cloud/hairform
 
 ## 빠른 확인
 

@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hair Product Review System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8B7355;
+            --accent: #D4A574;
+            --cream: #FAF8F6;
+            --dark: #2C2C2C;
+            --light: #F1EFED;
+            --border: #E8E4DF;
+            --text: #3D3D3D;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #F5EBE0 0%, #FCF7F2 100%);
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 5%;
+            width: 120px;
+            height: 120px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='hairGradient' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23D4A574;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%238B7355;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='40' y='30' width='40' height='70' rx='8' fill='url(%23hairGradient)' /%3E%3Crect x='45' y='25' width='30' height='10' rx='2' fill='%23D4A574' opacity='0.7' /%3E%3Ccircle cx='60' cy='45' r='4' fill='%23FFF' opacity='0.3' /%3E%3C/svg%3E") center / contain no-repeat;
+            opacity: 0.8;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 50px;
+            left: 8%;
+            width: 100px;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='hairBrushGradient' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%238B7355;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23A0826D;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='25' y='15' width='50' height='8' rx='4' fill='url(%23hairBrushGradient)' /%3E%3Crect x='30' y='25' width='3' height='20' fill='%23D4A574' /%3E%3Crect x='42' y='25' width='3' height='20' fill='%23D4A574' /%3E%3Crect x='54' y='25' width='3' height='20' fill='%23D4A574' /%3E%3Crect x='66' y='25' width='3' height='20' fill='%23D4A574' /%3E%3C/svg%3E") center / contain no-repeat;
+            opacity: 0.7;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 2.5em;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-style: italic;
+            color: var(--accent);
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .banner {
+            background: var(--dark);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .banner h2 {
+            font-size: 1.4em;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .banner p {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="url"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1em;
+            color: var(--text);
+            background: white;
+            transition: all 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="url"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 2px dashed var(--accent);
+            border-radius: 4px;
+            cursor: pointer;
+            background: rgba(212, 165, 116, 0.05);
+            width: 100%;
+        }
+
+        .checkbox-group {
+            background: var(--light);
+            padding: 16px;
+            border-radius: 4px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-item:last-child {
+            margin-bottom: 0;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+
+        .checkbox-label {
+            margin: 0;
+            font-weight: normal;
+            text-transform: none;
+            letter-spacing: normal;
+            font-size: 0.95em;
+            line-height: 1.5;
+            color: var(--text);
+        }
+
+        button {
+            padding: 14px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(139, 115, 85, 0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.secondary {
+            background: #999;
+            margin-left: 10px;
+        }
+
+        button.secondary:hover {
+            background: #777;
+        }
+
+        button.danger {
+            background: #D32F2F;
+        }
+
+        button.danger:hover {
+            background: #B71C1C;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .button-group button {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .required {
+            color: #D32F2F;
+        }
+
+        .help-text {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+
+        .success-message,
+        .error-message {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            background: #4CAF50;
+            color: white;
+        }
+
+        .error-message.show {
+            display: block;
+            background: #f44336;
+            color: white;
+        }
+
+        /* Admin Dashboard Styles */
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 4px;
+            border-left: 4px solid var(--accent);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-bar input {
+            flex: 1;
+        }
+
+        .search-bar select {
+            width: 150px;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--light);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:hover {
+            background: #fafafa;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-buttons button {
+            padding: 6px 12px;
+            font-size: 0.85em;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 4px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-close:hover {
+            color: #000;
+        }
+
+        .mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+        }
+
+        .mode-toggle button {
+            padding: 8px 16px;
+            font-size: 0.9em;
+            background: var(--primary);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .hero {
+                padding: 40px 20px;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .button-group button {
+                width: 100%;
+            }
+
+            .mode-toggle {
+                top: 10px;
+                right: 10px;
+            }
+
+            .mode-toggle button {
+                padding: 6px 12px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mode-toggle">
+        <button id="modeToggle">관리자 모드</button>
+    </div>
+
+    <!-- Customer Form Section -->
+    <div id="customerSection" class="customer-section active">
+        <div class="hero">
+            <div class="hero-content">
+                <h1>Hair Review</h1>
+                <p class="subtitle">share your experience</p>
+            </div>
+        </div>
+
+        <div class="banner">
+            <h2>Hair Product Review Form</h2>
+            <p>We'd love to hear about your experience with our hair products. Please share your review details below.</p>
+        </div>
+
+        <div class="container">
+            <div class="success-message" id="successMessage">
+                ✓ 리뷰가 성공적으로 제출되었습니다! Thank you for your review!
+            </div>
+
+            <form id="hairReviewForm">
+                <div class="form-group">
+                    <label for="country">Country <span class="required">*</span></label>
+                    <input type="text" id="country" name="country" placeholder="e.g., South Korea, United States, Japan..." required>
+                    <p class="help-text">Which country are you currently living in?</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="company">Company Name <span class="required">*</span></label>
+                    <input type="text" id="company" name="company" placeholder="e.g., Silicon2, ABC Distribution..." required>
+                    <p class="help-text">Which company provided you with the hair product? (e.g., distributor/reseller name)</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="reviewPhoto">Review Photo <span class="required">*</span></label>
+                    <input type="file" id="reviewPhoto" name="reviewPhoto" accept="image/*" multiple required>
+                    <p class="help-text">Please upload the photo(s) you used in your review. (JPG, PNG, WebP)</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="instagramLink">Instagram Post Link <span class="required">*</span></label>
+                    <input type="url" id="instagramLink" name="instagramLink" placeholder="https://instagram.com/..." required>
+                    <p class="help-text">Please paste the link to your Instagram post featuring the review.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Permission for Reuse <span class="required">*</span></label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="permission" name="permission" value="agree" required>
+                            <label for="permission" class="checkbox-label">
+                                ☐ I agree to allow Silicon2 to reuse my submitted photo(s) and Instagram post for marketing and promotional purposes (e.g., website, social media, ads).
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit">Submit Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Section -->
+    <div id="adminSection" class="admin-section">
+        <div style="background: var(--primary); color: white; padding: 40px 20px; text-align: center;">
+            <h1 style="color: white; margin-bottom: 5px;">Hair Review - 관리자 대시보드</h1>
+            <p>제출된 리뷰 자료를 확인하고 관리합니다</p>
+        </div>
+
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalReviews">0</div>
+                    <div class="stat-label">Total Reviews</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalPhotos">0</div>
+                    <div class="stat-label">Total Photos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalCountries">0</div>
+                    <div class="stat-label">Countries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalCompanies">0</div>
+                    <div class="stat-label">Companies</div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button onclick="exportJSON()">📥 Export JSON</button>
+                <button onclick="exportCSV()" class="secondary">📥 Export CSV</button>
+                <button onclick="clearAllData()" class="danger">🗑️ Clear All</button>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="검색: 국가, 회사, 인스타그램..." onkeyup="filterTable()">
+                <select id="filterCountry" onchange="filterTable()">
+                    <option value="">모든 국가</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>제출 시간</th>
+                            <th>국가</th>
+                            <th>회사</th>
+                            <th>사진</th>
+                            <th>인스타그램</th>
+                            <th>동의</th>
+                            <th>작업</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable">
+                        <tr>
+                            <td colspan="8" class="empty-message">아직 제출된 리뷰가 없습니다.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'hairReviews';
+        let allData = [];
+        let filteredData = [];
+        let currentMode = 'customer';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            setupCustomerForm();
+            setupAdminDashboard();
+
+            // Check URL for mode parameter
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('mode') === 'admin') {
+                switchMode('admin');
+            }
+        });
+
+        function loadData() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            allData = stored ? JSON.parse(stored) : [];
+            filteredData = [...allData];
+        }
+
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
+            updateDashboard();
+        }
+
+        // Customer Form
+        function setupCustomerForm() {
+            document.getElementById('hairReviewForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const formData = {
+                    id: Date.now(),
+                    country: document.getElementById('country').value,
+                    company: document.getElementById('company').value,
+                    instagram: document.getElementById('instagramLink').value,
+                    permission: document.getElementById('permission').checked,
+                    photoCount: document.getElementById('reviewPhoto').files.length,
+                    timestamp: new Date().toISOString()
+                };
+
+                allData.push(formData);
+                saveData();
+
+                const successMsg = document.getElementById('successMessage');
+                successMsg.classList.add('show');
+                this.reset();
+
+                setTimeout(() => {
+                    successMsg.classList.remove('show');
+                }, 3000);
+            });
+        }
+
+        // Admin Dashboard
+        function setupAdminDashboard() {
+            document.getElementById('modeToggle').addEventListener('click', function() {
+                const newMode = currentMode === 'customer' ? 'admin' : 'customer';
+                switchMode(newMode);
+            });
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            const customerSection = document.getElementById('customerSection');
+            const adminSection = document.getElementById('adminSection');
+            const modeToggle = document.getElementById('modeToggle');
+
+            if (mode === 'admin') {
+                customerSection.classList.remove('active');
+                adminSection.classList.add('active');
+                modeToggle.textContent = '고객 폼으로';
+                updateDashboard();
+            } else {
+                customerSection.classList.add('active');
+                adminSection.classList.remove('active');
+                modeToggle.textContent = '관리자 모드';
+            }
+        }
+
+        function updateDashboard() {
+            loadData();
+
+            // Update stats
+            const uniqueCountries = new Set(allData.map(d => d.country)).size;
+            const uniqueCompanies = new Set(allData.map(d => d.company)).size;
+            const totalPhotos = allData.reduce((sum, d) => sum + d.photoCount, 0);
+
+            document.getElementById('totalReviews').textContent = allData.length;
+            document.getElementById('totalPhotos').textContent = totalPhotos;
+            document.getElementById('totalCountries').textContent = uniqueCountries;
+            document.getElementById('totalCompanies').textContent = uniqueCompanies;
+
+            // Update filter dropdown
+            const countries = [...new Set(allData.map(d => d.country))].sort();
+            const filterSelect = document.getElementById('filterCountry');
+            const currentValue = filterSelect.value;
+            filterSelect.innerHTML = '<option value="">모든 국가</option>';
+            countries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country;
+                option.textContent = country;
+                filterSelect.appendChild(option);
+            });
+            filterSelect.value = currentValue;
+
+            // Render table
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('dataTable');
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-message">아직 제출된 리뷰가 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filteredData.map((item, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${new Date(item.timestamp).toLocaleString('ko-KR')}</td>
+                    <td>${item.country}</td>
+                    <td>${item.company}</td>
+                    <td>${item.photoCount}</td>
+                    <td><a href="${item.instagram}" target="_blank" style="color: var(--accent); text-decoration: none;">보기</a></td>
+                    <td>${item.permission ? '✓' : '✗'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button onclick="showDetail(${item.id})">상세</button>
+                            <button onclick="deleteItem(${item.id})" class="danger">삭제</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterTable() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const countryFilter = document.getElementById('filterCountry').value;
+
+            filteredData = allData.filter(item => {
+                const matchSearch = !searchTerm ||
+                    item.country.toLowerCase().includes(searchTerm) ||
+                    item.company.toLowerCase().includes(searchTerm) ||
+                    item.instagram.toLowerCase().includes(searchTerm);
+
+                const matchCountry = !countryFilter || item.country === countryFilter;
+
+                return matchSearch && matchCountry;
+            });
+
+            renderTable();
+        }
+
+        function showDetail(id) {
+            const item = allData.find(d => d.id === id);
+            if (!item) return;
+
+            const detailContent = document.getElementById('detailContent');
+            detailContent.innerHTML = `
+                <h2>리뷰 상세 정보</h2>
+                <p><strong>제출 시간:</strong> ${new Date(item.timestamp).toLocaleString('ko-KR')}</p>
+                <p><strong>국가:</strong> ${item.country}</p>
+                <p><strong>회사:</strong> ${item.company}</p>
+                <p><strong>업로드된 사진:</strong> ${item.photoCount}장</p>
+                <p><strong>인스타그램:</strong> <a href="${item.instagram}" target="_blank">${item.instagram}</a></p>
+                <p><strong>재사용 동의:</strong> ${item.permission ? '동의함' : '동의하지 않음'}</p>
+            `;
+
+            document.getElementById('detailModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('show');
+        }
+
+        function deleteItem(id) {
+            if (confirm('정말 삭제하시겠습니까?')) {
+                allData = allData.filter(d => d.id !== id);
+                saveData();
+                updateDashboard();
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('모든 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+                allData = [];
+                localStorage.removeItem(STORAGE_KEY);
+                updateDashboard();
+            }
+        }
+
+        function exportJSON() {
+            const dataStr = JSON.stringify(allData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            downloadFile(blob, 'hair_reviews.json');
+        }
+
+        function exportCSV() {
+            let csv = '제출시간,국가,회사,사진수,인스타그램,재사용동의\n';
+            allData.forEach(item => {
+                csv += `"${new Date(item.timestamp).toLocaleString('ko-KR')}","${item.country}","${item.company}",${item.photoCount},"${item.instagram}","${item.permission ? '예' : '아니오'}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            downloadFile(blob, 'hair_reviews.csv');
+        }
+
+        function downloadFile(blob, filename) {
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Auto-refresh dashboard every 5 seconds when in admin mode
+        setInterval(() => {
+            if (currentMode === 'admin') {
+                updateDashboard();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
