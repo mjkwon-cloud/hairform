@@ -31,6 +31,12 @@ HTML 파일을 브라우저에서 열면 로컬 데모 모드로 동작합니다
 
 관리자 화면은 30초마다 새 제출 자료를 조회합니다. 삭제와 전체 삭제는 관리자 토큰이 일치할 때만 실행됩니다.
 
+### 현재 파일에 연결하기
+
+`hair_review_form_customer.html`의 `SUBMISSION_ENDPOINT`와 `hair_review_admin.html`의 `DATA_ENDPOINT`에 Apps Script 웹 앱 URL을 동일하게 입력합니다. 관리자 토큰은 HTML에 저장하지 않고 관리자 페이지를 처음 열 때 입력하며, 현재 브라우저 세션에만 보관합니다.
+
+Apps Script 웹 앱 URL이 아직 없다면 이 저장소만으로는 서로 다른 기기 간 저장소를 만들 수 없습니다. Google 계정으로 Apps Script 배포를 완료한 뒤 URL을 입력하고 다시 GitHub Pages에 푸시해야 합니다.
+
 ## GitHub
 
 저장소: https://github.com/mjkwon-cloud/hairform

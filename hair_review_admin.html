@@ -417,15 +417,28 @@
     <script>
         // Deploy apps_script_backend.gs as a web app, then paste its URL here.
         const DATA_ENDPOINT = '';
-        const ADMIN_TOKEN = '';
+        const TOKEN_STORAGE_KEY = 'hairReviewAdminToken';
         let allReviews = [];
+
+        function getAdminToken() {
+            let token = sessionStorage.getItem(TOKEN_STORAGE_KEY);
+            if (!token && DATA_ENDPOINT) {
+                token = window.prompt('관리자 토큰을 입력하세요. Apps Script setup 실행 로그에서 확인할 수 있습니다.');
+                if (token) sessionStorage.setItem(TOKEN_STORAGE_KEY, token.trim());
+            }
+            return token || '';
+        }
 
         // 초기 로드
         async function loadData() {
             if (DATA_ENDPOINT) {
                 try {
-                    const response = await fetch(`${DATA_ENDPOINT}?action=list&token=${encodeURIComponent(ADMIN_TOKEN)}`);
+                    const response = await fetch(`${DATA_ENDPOINT}?action=list&token=${encodeURIComponent(getAdminToken())}`);
                     const result = await response.json();
+                    if (!result.ok && result.error === 'Unauthorized') {
+                        sessionStorage.removeItem(TOKEN_STORAGE_KEY);
+                        throw new Error('관리자 토큰이 올바르지 않습니다.');
+                    }
                     allReviews = result.data || [];
                 } catch (error) {
                     console.error('Unable to load reviews:', error);
@@ -588,7 +601,7 @@
         async function deleteReview(index) {
             if (confirm('정말 삭제하시겠습니까?')) {
                 if (DATA_ENDPOINT) {
-                    await fetch(`${DATA_ENDPOINT}?action=delete&id=${encodeURIComponent(allReviews[index].id)}&token=${encodeURIComponent(ADMIN_TOKEN)}`);
+                    await fetch(`${DATA_ENDPOINT}?action=delete&id=${encodeURIComponent(allReviews[index].id)}&token=${encodeURIComponent(getAdminToken())}`);
                     await loadData();
                     return;
                 }
@@ -604,7 +617,7 @@
         async function clearAllData() {
             if (confirm('정말로 모든 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
                 if (DATA_ENDPOINT) {
-                    await fetch(`${DATA_ENDPOINT}?action=clear&token=${encodeURIComponent(ADMIN_TOKEN)}`);
+                    await fetch(`${DATA_ENDPOINT}?action=clear&token=${encodeURIComponent(getAdminToken())}`);
                     await loadData();
                     alert('모든 데이터가 삭제되었습니다.');
                     return;
