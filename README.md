@@ -27,7 +27,7 @@ HTML 파일을 브라우저에서 열면 로컬 데모 모드로 동작합니다
 6. 배포 URL을 복사합니다.
 7. `hair_review_form_customer.html`의 `SUBMISSION_ENDPOINT`에 URL을 입력합니다.
 8. `hair_review_admin.html`의 `DATA_ENDPOINT`에 같은 URL을 입력합니다.
-9. Apps Script 실행 로그의 `ADMIN_TOKEN` 값을 관리자 HTML의 `ADMIN_TOKEN`에 입력합니다.
+9. Apps Script 실행 로그의 `ADMIN_TOKEN`을 관리자 페이지를 처음 열 때 입력합니다.
 
 관리자 화면은 30초마다 새 제출 자료를 조회합니다. 삭제와 전체 삭제는 관리자 토큰이 일치할 때만 실행됩니다.
 
@@ -35,7 +35,13 @@ HTML 파일을 브라우저에서 열면 로컬 데모 모드로 동작합니다
 
 `hair_review_form_customer.html`의 `SUBMISSION_ENDPOINT`와 `hair_review_admin.html`의 `DATA_ENDPOINT`에 Apps Script 웹 앱 URL을 동일하게 입력합니다. 관리자 토큰은 HTML에 저장하지 않고 관리자 페이지를 처음 열 때 입력하며, 현재 브라우저 세션에만 보관합니다.
 
-Apps Script 웹 앱 URL이 아직 없다면 이 저장소만으로는 서로 다른 기기 간 저장소를 만들 수 없습니다. Google 계정으로 Apps Script 배포를 완료한 뒤 URL을 입력하고 다시 GitHub Pages에 푸시해야 합니다.
+현재 연결된 Apps Script 웹 앱 URL:
+
+`https://script.google.com/a/macros/siliconii.net/s/AKfycbzxygG5vqv4qU9YBgtUN_zFQAGK_8vSSez0KPMxnujxU/exec`
+
+생성된 Google Sheets 저장소: `https://docs.google.com/spreadsheets/d/1K3STAYP0PZqU9_VIDuCa0vsFQ-IB9NfQ89sdfkOXKkw/edit`
+
+Apps Script 웹 앱 URL이 없다면 이 저장소만으로는 서로 다른 기기 간 저장소를 만들 수 없습니다. Google 계정으로 Apps Script 배포를 완료한 뒤 URL을 입력하고 다시 GitHub Pages에 푸시해야 합니다.
 
 ## GitHub
 
