@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hair Product Review Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8B7355;
+            --accent: #D4A574;
+            --cream: #FAF8F6;
+            --dark: #2C2C2C;
+            --light: #F1EFED;
+            --border: #E8E4DF;
+            --text: #3D3D3D;
+            --success: #4CAF50;
+            --error: #D32F2F;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #F5EBE0 0%, #FCF7F2 100%);
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 5%;
+            width: 120px;
+            height: 120px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='hairGradient' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23D4A574;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%238B7355;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='40' y='30' width='40' height='70' rx='8' fill='url(%23hairGradient)' /%3E%3Crect x='45' y='25' width='30' height='10' rx='2' fill='%23D4A574' opacity='0.7' /%3E%3Ccircle cx='60' cy='45' r='4' fill='%23FFF' opacity='0.3' /%3E%3C/svg%3E") center / contain no-repeat;
+            opacity: 0.8;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 50px;
+            left: 8%;
+            width: 100px;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='hairBrushGradient' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%238B7355;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23A0826D;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='25' y='15' width='50' height='8' rx='4' fill='url(%23hairBrushGradient)' /%3E%3Crect x='30' y='25' width='3' height='20' fill='%23D4A574' /%3E%3Crect x='42' y='25' width='3' height='20' fill='%23D4A574' /%3E%3Crect x='54' y='25' width='3' height='20' fill='%23D4A574' /%3E%3Crect x='66' y='25' width='3' height='20' fill='%23D4A574' /%3E%3C/svg%3E") center / contain no-repeat;
+            opacity: 0.7;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 2.5em;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-style: italic;
+            color: var(--accent);
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .banner {
+            background: var(--dark);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .banner h2 {
+            font-size: 1.4em;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .banner p {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert.success {
+            background: #C8E6C9;
+            color: #2E7D32;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .alert.error {
+            background: #FFCDD2;
+            color: #C62828;
+            border-left: 4px solid #D32F2F;
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="url"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1em;
+            color: var(--text);
+            background: white;
+            transition: all 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="url"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+        }
+
+        input.error,
+        textarea.error {
+            border-color: var(--error);
+            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 2px dashed var(--accent);
+            border-radius: 4px;
+            cursor: pointer;
+            background: rgba(212, 165, 116, 0.05);
+            width: 100%;
+        }
+
+        .file-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .preview-item {
+            position: relative;
+            border-radius: 4px;
+            overflow: hidden;
+            background: var(--light);
+            aspect-ratio: 1;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-remove {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkbox-group {
+            background: var(--light);
+            padding: 16px;
+            border-radius: 4px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-item:last-child {
+            margin-bottom: 0;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+
+        .checkbox-label {
+            margin: 0;
+            font-weight: normal;
+            text-transform: none;
+            letter-spacing: normal;
+            font-size: 0.95em;
+            line-height: 1.5;
+            color: var(--text);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover:not(:disabled) {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(139, 115, 85, 0.15);
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        button.secondary {
+            background: #999;
+        }
+
+        button.secondary:hover:not(:disabled) {
+            background: #777;
+        }
+
+        .required {
+            color: #D32F2F;
+        }
+
+        .help-text {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+
+        .char-count {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .hero {
+                padding: 40px 20px;
+            }
+
+            .form-container {
+                padding: 30px 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Hair Review</h1>
+            <p class="subtitle">share your experience</p>
+        </div>
+    </div>
+
+    <div class="banner">
+        <h2>Hair Product Review Form</h2>
+        <p>We'd love to hear about your experience with our hair products. Please share your review details below.</p>
+    </div>
+
+    <div class="form-container">
+        <div class="alert success" id="successAlert">
+            ✓ 리뷰가 성공적으로 제출되었습니다! Thank you for your review!
+        </div>
+
+        <div class="alert error" id="errorAlert">
+            ✗ 오류가 발생했습니다. Please fill in all required fields.
+        </div>
+
+        <form id="hairReviewForm">
+            <!-- 1. Country -->
+            <div class="form-group">
+                <label for="country">Country <span class="required">*</span></label>
+                <input type="text" id="country" name="country" placeholder="e.g., South Korea, United States, Japan..." required>
+                <p class="help-text">Which country are you currently living in?</p>
+            </div>
+
+            <!-- 2. Company Name -->
+            <div class="form-group">
+                <label for="company">Company Name <span class="required">*</span></label>
+                <input type="text" id="company" name="company" placeholder="e.g., Silicon2, ABC Distribution..." required>
+                <p class="help-text">Which company provided you with the hair product? (e.g., distributor/reseller name)</p>
+            </div>
+
+            <!-- 3. Review Photo -->
+            <div class="form-group">
+                <label for="reviewPhoto">Review Photo <span class="required">*</span></label>
+                <input type="file" id="reviewPhoto" name="reviewPhoto" accept="image/*" multiple required>
+                <div class="file-preview" id="filePreview"></div>
+                <p class="help-text">Please upload the photo(s) you used in your review. (JPG, PNG, WebP)</p>
+            </div>
+
+            <!-- 4. Instagram Post Link -->
+            <div class="form-group">
+                <label for="instagramLink">Instagram Post Link <span class="required">*</span></label>
+                <input type="url" id="instagramLink" name="instagramLink" placeholder="https://instagram.com/..." required>
+                <p class="help-text">Please paste the link to your Instagram post featuring the review.</p>
+            </div>
+
+            <!-- 5. Permission for Reuse -->
+            <div class="form-group">
+                <label>Permission for Reuse <span class="required">*</span></label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="permission" name="permission" value="agree" required>
+                        <label for="permission" class="checkbox-label">
+                            ☐ I agree to allow Silicon2 to reuse my submitted photo(s) and Instagram post for marketing and promotional purposes (e.g., website, social media, ads).
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button type="submit">Submit Review</button>
+                <button type="reset" class="secondary">Clear Form</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Deploy apps_script_backend.gs as a web app, then paste its URL here.
+        const SUBMISSION_ENDPOINT = '';
+        const STORAGE_KEY = 'hairReviews';
+        const form = document.getElementById('hairReviewForm');
+        const successAlert = document.getElementById('successAlert');
+        const errorAlert = document.getElementById('errorAlert');
+        const fileInput = document.getElementById('reviewPhoto');
+        const filePreview = document.getElementById('filePreview');
+        let selectedFiles = [];
+
+        // 파일 미리보기
+        fileInput.addEventListener('change', function(e) {
+            selectedFiles = Array.from(e.target.files);
+            updateFilePreview();
+        });
+
+        function updateFilePreview() {
+            filePreview.innerHTML = '';
+            selectedFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const item = document.createElement('div');
+                    item.className = 'preview-item';
+                    item.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview ${index + 1}">
+                        <button type="button" class="preview-remove" data-index="${index}">×</button>
+                    `;
+                    filePreview.appendChild(item);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // 제거 버튼 이벤트
+            document.querySelectorAll('.preview-remove').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const index = parseInt(this.dataset.index);
+                    selectedFiles.splice(index, 1);
+                    updateFilePreview();
+                });
+            });
+        }
+
+        // 폼 제출
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // 유효성 검사
+            if (!validateForm()) {
+                showError('Please fill in all required fields.');
+                return;
+            }
+
+            const data = {
+                id: Date.now(),
+                country: document.getElementById('country').value,
+                company: document.getElementById('company').value,
+                instagram: document.getElementById('instagramLink').value,
+                permission: document.getElementById('permission').checked,
+                timestamp: new Date().toISOString(),
+                photoCount: selectedFiles.length,
+                photos: await Promise.all(selectedFiles.map(readFileAsDataUrl))
+            };
+
+            try {
+                if (SUBMISSION_ENDPOINT) {
+                    await fetch(SUBMISSION_ENDPOINT, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(data)
+                    });
+                } else {
+                    const reviews = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                    reviews.push({ ...data, photos: [] });
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews));
+                }
+            } catch (error) {
+                console.error('Review submission failed:', error);
+                showError('제출에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+                return;
+            }
+
+            // 성공 메시지
+            showSuccess('Review submitted successfully! Thank you for your review!');
+
+            // 폼 초기화
+            form.reset();
+            selectedFiles = [];
+            updateFilePreview();
+
+            // 3초 후 메시지 숨김
+            setTimeout(() => {
+                successAlert.classList.remove('show');
+            }, 3000);
+        });
+
+        function readFileAsDataUrl(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve({ name: file.name, type: file.type, data: reader.result });
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function validateForm() {
+            const country = document.getElementById('country').value.trim();
+            const company = document.getElementById('company').value.trim();
+            const instagram = document.getElementById('instagramLink').value.trim();
+            const permission = document.getElementById('permission').checked;
+
+            return country && company && instagram && permission && selectedFiles.length > 0;
+        }
+
+        function showSuccess(message) {
+            successAlert.textContent = '✓ ' + message;
+            successAlert.classList.add('show');
+            errorAlert.classList.remove('show');
+        }
+
+        function showError(message) {
+            errorAlert.textContent = '✗ ' + message;
+            errorAlert.classList.add('show');
+            successAlert.classList.remove('show');
+        }
+
+        // 폼 리셋
+        form.addEventListener('reset', function(e) {
+            setTimeout(() => {
+                selectedFiles = [];
+                updateFilePreview();
+            }, 0);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hair Review - 관리자 대시보드</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8B7355;
+            --accent: #D4A574;
+            --cream: #FAF8F6;
+            --dark: #2C2C2C;
+            --light: #F1EFED;
+            --border: #E8E4DF;
+            --text: #3D3D3D;
+            --success: #4CAF50;
+            --warning: #FFA726;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--cream);
+            color: var(--text);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 30px 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95em;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--accent);
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        input[type="search"],
+        select {
+            padding: 10px 15px;
+            border: 1.5px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.95em;
+        }
+
+        input[type="search"] {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(139, 115, 85, 0.2);
+        }
+
+        button.secondary {
+            background: #999;
+        }
+
+        button.secondary:hover {
+            background: #777;
+        }
+
+        button.danger {
+            background: #D32F2F;
+        }
+
+        button.danger:hover {
+            background: #B71C1C;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--light);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 2px solid var(--border);
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:hover {
+            background: #FAFAFA;
+        }
+
+        .date {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            background: #C8E6C9;
+            color: #2E7D32;
+        }
+
+        .photo-count {
+            display: inline-block;
+            background: var(--light);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .actions button {
+            padding: 6px 12px;
+            font-size: 0.8em;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .detail-row {
+            margin-bottom: 20px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--dark);
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .detail-value {
+            color: var(--text);
+            word-break: break-word;
+            padding: 10px;
+            background: var(--light);
+            border-radius: 4px;
+        }
+
+        .link-value {
+            color: var(--primary);
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .link-value:hover {
+            text-decoration: underline;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-message svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            input[type="search"] {
+                min-width: 100%;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .actions button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>💇 Hair Review - 관리자 대시보드</h1>
+        <p>제출된 리뷰 자료를 확인하고 관리합니다</p>
+    </div>
+
+    <div class="container">
+        <!-- 통계 -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalReviews">0</div>
+                <div class="stat-label">Total Reviews</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalPhotos">0</div>
+                <div class="stat-label">Total Photos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="uniqueCountries">0</div>
+                <div class="stat-label">Countries</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="uniqueCompanies">0</div>
+                <div class="stat-label">Companies</div>
+            </div>
+        </div>
+
+        <!-- 검색 및 내보내기 -->
+        <div class="export-buttons">
+            <button onclick="exportJSON()">📥 Export JSON</button>
+            <button class="secondary" onclick="exportCSV()">📥 Export CSV</button>
+            <button class="danger" onclick="clearAllData()">🗑️ Clear All</button>
+        </div>
+
+        <div class="controls">
+            <input type="search" id="searchInput" placeholder="검색: 국가, 회사명, 링크..." onkeyup="filterTable()">
+            <select id="countryFilter" onchange="filterTable()">
+                <option value="">모든 국가</option>
+            </select>
+        </div>
+
+        <!-- 테이블 -->
+        <div class="table-wrapper">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>제출 시간</th>
+                        <th>국가</th>
+                        <th>회사</th>
+                        <th>사진</th>
+                        <th>인스타그램</th>
+                        <th>상태</th>
+                        <th>작업</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td colspan="8" class="empty-message">
+                            아직 제출된 리뷰가 없습니다.<br>
+                            <a href="https://claude.ai/code/artifact/48be0a58-9661-400b-9b0d-53bbfc6bf5aa" target="_blank">폼 페이지로 이동</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 상세 보기 모달 -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>리뷰 상세 정보</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Deploy apps_script_backend.gs as a web app, then paste its URL here.
+        const DATA_ENDPOINT = '';
+        const ADMIN_TOKEN = '';
+        let allReviews = [];
+
+        // 초기 로드
+        async function loadData() {
+            if (DATA_ENDPOINT) {
+                try {
+                    const response = await fetch(`${DATA_ENDPOINT}?action=list&token=${encodeURIComponent(ADMIN_TOKEN)}`);
+                    const result = await response.json();
+                    allReviews = result.data || [];
+                } catch (error) {
+                    console.error('Unable to load reviews:', error);
+                    allReviews = [];
+                }
+            } else {
+                const data = localStorage.getItem('hairReviews');
+                allReviews = data ? JSON.parse(data) : [];
+            }
+            updateStats();
+            renderTable();
+            updateCountryFilter();
+        }
+
+        // 통계 업데이트
+        function updateStats() {
+            document.getElementById('totalReviews').textContent = allReviews.length;
+
+            let totalPhotos = 0;
+            allReviews.forEach(review => {
+                totalPhotos += (review.photoCount || 0);
+            });
+            document.getElementById('totalPhotos').textContent = totalPhotos;
+
+            const countries = new Set(allReviews.map(r => r.country));
+            document.getElementById('uniqueCountries').textContent = countries.size;
+
+            const companies = new Set(allReviews.map(r => r.company));
+            document.getElementById('uniqueCompanies').textContent = companies.size;
+        }
+
+        // 테이블 렌더링
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+
+            if (allReviews.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-message">아직 제출된 리뷰가 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = allReviews.map((review, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td class="date">${new Date(review.timestamp).toLocaleString('ko-KR')}</td>
+                    <td>${review.country}</td>
+                    <td>${review.company}</td>
+                    <td><span class="photo-count">🖼️ ${review.photoCount || 0}</span></td>
+                    <td>
+                        <a href="${review.instagram}" target="_blank" class="link-value" title="Open Instagram">
+                            📱 Post
+                        </a>
+                    </td>
+                    <td><span class="status">✓ Approved</span></td>
+                    <td class="actions">
+                        <button onclick="viewDetail(${index})">📖 상세</button>
+                        <button class="danger" onclick="deleteReview(${index})">삭제</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 필터링
+        function filterTable() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const countryFilter = document.getElementById('countryFilter').value;
+
+            const filtered = allReviews.filter(review => {
+                const matchSearch = !searchTerm ||
+                    review.country.toLowerCase().includes(searchTerm) ||
+                    review.company.toLowerCase().includes(searchTerm) ||
+                    review.instagram.toLowerCase().includes(searchTerm);
+
+                const matchCountry = !countryFilter || review.country === countryFilter;
+
+                return matchSearch && matchCountry;
+            });
+
+            const tbody = document.getElementById('tableBody');
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-message">검색 결과가 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((review, index) => `
+                <tr>
+                    <td>${allReviews.indexOf(review) + 1}</td>
+                    <td class="date">${new Date(review.timestamp).toLocaleString('ko-KR')}</td>
+                    <td>${review.country}</td>
+                    <td>${review.company}</td>
+                    <td><span class="photo-count">🖼️ ${review.photoCount || 0}</span></td>
+                    <td>
+                        <a href="${review.instagram}" target="_blank" class="link-value">
+                            📱 Post
+                        </a>
+                    </td>
+                    <td><span class="status">✓ Approved</span></td>
+                    <td class="actions">
+                        <button onclick="viewDetail(${allReviews.indexOf(review)})">📖 상세</button>
+                        <button class="danger" onclick="deleteReview(${allReviews.indexOf(review)})">삭제</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 국가 필터 업데이트
+        function updateCountryFilter() {
+            const countries = [...new Set(allReviews.map(r => r.country))].sort();
+            const select = document.getElementById('countryFilter');
+            const currentValue = select.value;
+
+            select.innerHTML = '<option value="">모든 국가</option>' +
+                countries.map(country => `<option value="${country}">${country}</option>`).join('');
+
+            select.value = currentValue;
+        }
+
+        // 상세 보기
+        function viewDetail(index) {
+            const review = allReviews[index];
+            const detailContent = document.getElementById('detailContent');
+
+            detailContent.innerHTML = `
+                <div class="detail-row">
+                    <div class="detail-label">제출 시간</div>
+                    <div class="detail-value">${new Date(review.timestamp).toLocaleString('ko-KR')}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">국가</div>
+                    <div class="detail-value">${review.country}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">회사명</div>
+                    <div class="detail-value">${review.company}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">인스타그램 링크</div>
+                    <div class="detail-value">
+                        <a href="${review.instagram}" target="_blank" class="link-value">${review.instagram}</a>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">사진 업로드 수</div>
+                    <div class="detail-value">${review.photoCount || 0}개</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">재사용 동의</div>
+                    <div class="detail-value">${review.permission ? '✓ 동의함' : '✗ 동의 안함'}</div>
+                </div>
+            `;
+
+            document.getElementById('detailModal').classList.add('show');
+        }
+
+        // 모달 닫기
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('show');
+        }
+
+        // 리뷰 삭제
+        async function deleteReview(index) {
+            if (confirm('정말 삭제하시겠습니까?')) {
+                if (DATA_ENDPOINT) {
+                    await fetch(`${DATA_ENDPOINT}?action=delete&id=${encodeURIComponent(allReviews[index].id)}&token=${encodeURIComponent(ADMIN_TOKEN)}`);
+                    await loadData();
+                    return;
+                }
+                allReviews.splice(index, 1);
+                localStorage.setItem('hairReviews', JSON.stringify(allReviews));
+                updateStats();
+                renderTable();
+                updateCountryFilter();
+            }
+        }
+
+        // 모든 데이터 삭제
+        async function clearAllData() {
+            if (confirm('정말로 모든 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+                if (DATA_ENDPOINT) {
+                    await fetch(`${DATA_ENDPOINT}?action=clear&token=${encodeURIComponent(ADMIN_TOKEN)}`);
+                    await loadData();
+                    alert('모든 데이터가 삭제되었습니다.');
+                    return;
+                }
+                localStorage.removeItem('hairReviews');
+                allReviews = [];
+                updateStats();
+                renderTable();
+                updateCountryFilter();
+                alert('모든 데이터가 삭제되었습니다.');
+            }
+        }
+
+        // JSON 내보내기
+        function exportJSON() {
+            const dataStr = JSON.stringify(allReviews, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            downloadFile(dataBlob, `hair_reviews_${new Date().toISOString().split('T')[0]}.json`);
+        }
+
+        // CSV 내보내기
+        function exportCSV() {
+            let csv = '제출시간,국가,회사,사진수,인스타그램,동의\n';
+            allReviews.forEach(review => {
+                csv += `"${new Date(review.timestamp).toLocaleString('ko-KR')}","${review.country}","${review.company}",${review.photoCount || 0},"${review.instagram}","${review.permission ? 'Y' : 'N'}"\n`;
+            });
+            const dataBlob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            downloadFile(dataBlob, `hair_reviews_${new Date().toISOString().split('T')[0]}.csv`);
+        }
+
+        // 파일 다운로드
+        function downloadFile(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // 모달 밖 클릭 시 닫기
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target === modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        // 초기 로드
+        loadData();
+        if (DATA_ENDPOINT) {
+            setInterval(loadData, 30000);
+        }
+
+        // 주기적 새로고침 (5초마다)
+        setInterval(loadData, 5000);
+    </script>
+</body>
+</html>
