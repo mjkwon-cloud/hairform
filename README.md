@@ -37,7 +37,7 @@ HTML 파일을 브라우저에서 열면 로컬 데모 모드로 동작합니다
 
 현재 연결된 Apps Script 웹 앱 URL:
 
-`https://script.google.com/a/macros/siliconii.net/s/AKfycbzxygG5vqv4qU9YBgtUN_zFQAGK_8vSSez0KPMxnujxU/exec`
+`https://script.google.com/macros/s/AKfycbzVlwiGAjj9ioAXDE_hb5WmVMjVO4uFN1J2_cdAto_2zBrXSmrHNs2PUQHM-h6XbBMc/exec`
 
 생성된 Google Sheets 저장소: `https://docs.google.com/spreadsheets/d/1K3STAYP0PZqU9_VIDuCa0vsFQ-IB9NfQ89sdfkOXKkw/edit`
 
