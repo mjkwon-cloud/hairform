@@ -87,7 +87,9 @@ function savePhoto_(photo) {
   const match = String(photo.data || '').match(/^data:(.*?);base64,(.*)$/);
   if (!match) return '';
   const blob = Utilities.newBlob(Utilities.base64Decode(match[2]), match[1], photo.name || 'review-photo');
-  return getPhotoFolder_().createFile(blob).getUrl();
+  const file = getPhotoFolder_().createFile(blob);
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  return `https://drive.google.com/uc?export=view&id=${file.getId()}`;
 }
 
 function getSheet_() {

@@ -275,6 +275,34 @@
             border-radius: 4px;
         }
 
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            padding: 10px;
+            background: var(--light);
+            border-radius: 4px;
+        }
+
+        .photo-gallery a {
+            display: block;
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 4px;
+            background: white;
+        }
+
+        .photo-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.2s;
+        }
+
+        .photo-gallery img:hover {
+            transform: scale(1.04);
+        }
+
         .link-value {
             color: var(--primary);
             text-decoration: none;
@@ -579,6 +607,13 @@
         function viewDetail(index) {
             const review = allReviews[index];
             const detailContent = document.getElementById('detailContent');
+            const photoUrls = Array.isArray(review.photoUrls) ? review.photoUrls.filter(Boolean) : [];
+            const photoGallery = photoUrls.length
+                ? `<div class="photo-gallery">${photoUrls.map((url, photoIndex) => `
+                    <a href="${escapeHtml(url)}" target="_blank" rel="noopener" aria-label="사진 ${photoIndex + 1} 원본 열기">
+                        <img src="${escapeHtml(url)}" alt="리뷰 사진 ${photoIndex + 1}" loading="lazy">
+                    </a>`).join('')}</div>`
+                : '<div class="detail-value">저장된 이미지가 없습니다.</div>';
 
             detailContent.innerHTML = `
                 <div class="detail-row">
@@ -604,12 +639,26 @@
                     <div class="detail-value">${review.photoCount || 0}개</div>
                 </div>
                 <div class="detail-row">
+                    <div class="detail-label">업로드 이미지</div>
+                    ${photoGallery}
+                </div>
+                <div class="detail-row">
                     <div class="detail-label">재사용 동의</div>
                     <div class="detail-value">${review.permission ? '✓ 동의함' : '✗ 동의 안함'}</div>
                 </div>
             `;
 
             document.getElementById('detailModal').classList.add('show');
+        }
+
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>'"]/g, character => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[character]));
         }
 
         // 모달 닫기
